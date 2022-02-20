@@ -4,7 +4,7 @@ from flask import render_template
 from app.catalog.models import Book,Publication
 from app import login_manager
 
-@login_manager.user_loader
+# @login_manager.user_loader
 @catalog.route('/')
 def display_books():
     books = Book.query.all()

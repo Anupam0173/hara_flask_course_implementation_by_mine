@@ -1,11 +1,16 @@
-from flask import render_template, request,redirect,url_for,flash
-from app.auth.forms import RegistrationForm,LoginForm
+from flask import render_template, flash, redirect, url_for
+from app.auth.forms import RegistrationForm, LoginForm
 from app.auth import authentication as at
 from app.auth.models import User
 from flask_login import login_user, logout_user, login_required, current_user
 
+
 @at.route('/register', methods=['GET', 'POST'])
 def register_user():
+    if current_user.is_authenticated:
+        flash('You are already logged-in')
+        return redirect(url_for('catalog.display_books'))
+
     form = RegistrationForm()
     if form.validate_on_submit():
         User.create_user(
@@ -16,13 +21,11 @@ def register_user():
         return redirect(url_for('authentication.do_the_login'))
     return render_template('registration.html', form=form)
 
-
-
 @at.route('/login', methods=['GET', 'POST'])
 def do_the_login():
     if current_user.is_authenticated:
         flash('You are already logged-in')
-        return redirect(url_for('main.display_books'))
+        return redirect(url_for('catalog.display_books'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -33,5 +36,11 @@ def do_the_login():
             return redirect(url_for('authentication.do_the_login'))
 
         login_user(user, form.stay_loggedin.data)
-        return redirect(url_for('main.display_books'))
+        return redirect(url_for('catalog.display_books'))
     return render_template('login.html', form=form)
+
+@at.route('/logout')
+@login_required
+def log_out_user():
+    logout_user()
+    return redirect(url_for('catalog.display_books'))

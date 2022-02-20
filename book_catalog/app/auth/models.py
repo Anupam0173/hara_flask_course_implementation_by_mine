@@ -2,9 +2,11 @@
 
 from datetime import datetime
 from app import db, bcrypt  # app/__init__.py
+from flask_login import UserMixin
+from app import login_manager
 
 
-class User( db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -25,3 +27,8 @@ class User( db.Model):
         db.session.add(user)
         db.session.commit()
         return user
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
