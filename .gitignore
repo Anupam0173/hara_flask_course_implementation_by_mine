@@ -1,0 +1,11 @@
+/env
+/_pycache__
+book_catalog.zip
+/.idea
+/book_catalog/app/_pycache__
+/book_catalog/app/auth/_pycache__
+
+
+
+
+
