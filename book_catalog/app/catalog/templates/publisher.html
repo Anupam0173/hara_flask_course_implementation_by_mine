@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container publisher">
+        <h4> Books by {{ publisher.name }} </h4>
+        <hr><br>
+        <ol>
+            {% for book in publisher_books %}
+                <li type="1">
+                    {{ book.title }} by {{ book.author }}
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+</body>
+</html>
