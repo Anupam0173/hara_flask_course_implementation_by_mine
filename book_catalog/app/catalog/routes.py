@@ -4,7 +4,7 @@ from app import db
 from flask import render_template,request,flash,redirect,url_for
 from app.catalog.models import Book,Publication
 from app import login_manager
-from app.catalog.forms import EditBookForm
+from app.catalog.forms import EditBookForm,CreateBookForm
 
 # @login_manager.user_loader
 @catalog.route('/')
@@ -48,3 +48,18 @@ def edit_book(book_id):
     print("---book_format-->",book.format)
 
     return render_template('edit_book.html', form=form)
+
+@catalog.route('/create/book/<pub_id>', methods=['GET', 'POST'])
+# @login_required
+def create_book(pub_id):
+    form = CreateBookForm()
+    form.pub_id.data = pub_id  # pre-populates pub_id
+    if form.validate_on_submit():
+        book = Book(title=form.title.data, author=form.author.data, avg_rating=form.avg_rating.data,
+                    book_format=form.format.data, image=form.img_url.data, num_pages=form.num_pages.data,
+                    pub_id=form.pub_id.data)
+        db.session.add(book)
+        db.session.commit()
+        flash('Book added successfully')
+        return redirect(url_for('main.display_publisher', publisher_id=pub_id))
+    return render_template('create_book.html', form=form, pub_id=pub_id)
